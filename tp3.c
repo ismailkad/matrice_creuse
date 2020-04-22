@@ -132,3 +132,55 @@ void addMat(matrice_creuse m1, matrice_creuse m2) {
         }
     }
 }
+
+//Fonction pour mettre à jour ou ajouter une valeur dans notre matrice
+void putValue(matrice_creuse m, int i, int j, int val) {
+    
+    element *prec = NULL, *tmp = NULL, *elem = m.tableauLignes[i];
+    
+    if (elem == NULL) {
+        tmp = malloc(sizeof(element));
+        m.tableauLignes[i] = tmp;
+        tmp->suivant = NULL;
+        tmp->valeur = val;
+        tmp->colonne = j;
+    }
+    
+    else {
+        if (elem->colonne == j) //1er cas
+            elem->valeur = val;
+        
+        else if (elem->colonne > j) { //2ème cas
+            
+            tmp = malloc(sizeof(element));
+            m.tableauLignes[i] = tmp;
+            tmp->suivant = elem;
+            tmp->valeur = val;
+            tmp->colonne = j;
+        }
+        
+        else if (elem->colonne < j) { //3ème cas
+            
+            while ((elem->colonne < j) && (elem->suivant != NULL)) {
+                prec = elem;
+                elem = elem->suivant;
+            }
+            if (elem->colonne > j) {
+                tmp = malloc(sizeof(element));
+                prec->suivant = tmp;
+                tmp->suivant = elem;
+                tmp->valeur = val;
+                tmp->colonne = j;
+            }
+            else if (elem->colonne == j)
+                elem->valeur = val;
+            else {
+                tmp = malloc(sizeof(element));
+                elem->suivant = tmp;
+                tmp->suivant = NULL;
+                tmp->valeur = val;
+                tmp->colonne = j;
+            }
+        }
+    }
+}

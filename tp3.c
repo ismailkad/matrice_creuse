@@ -71,3 +71,64 @@ void afficherMat(matrice_creuse m) {
         printf("\n");
     }
 }
+
+void addMat(matrice_creuse m1, matrice_creuse m2) {
+    
+    int i,j;
+    element *elem, *prec = NULL;
+    
+    if ((m1.Nlignes != m2.Nlignes) || (m1.Ncolonnes != m2.Ncolonnes))
+        printf("Erreur: les deux matrices doivent être de mêmes dimensions");
+    else{
+        
+        for (i=0; i<m1.Nlignes; i++) {
+            
+            element *pt1 = m1.tableauLignes[i];
+            element *pt2 = m2.tableauLignes[i];
+            
+            if ( ((pt1 == NULL) && (pt2 == NULL)) || (pt2 == NULL) ) //si les 2 lignes ne comportent que des 0 ou si la ligne de m2 ne comporte que des 0
+                continue; // on n'a pas besoin de passer à la boucle sur les colonnes, 'continue' ici va passer à l'itération de ligne suivante
+            else if (pt1 == NULL)//si la ligne de m1 ne comporte que des 0
+                pt1 = pt2;
+            
+            for (j=0; j<m1.Nlignes; j++) {
+                
+                if (pt2 == NULL) //si l'élément de la 2ème matrice est NULL alors on sort de cette boucle car il n'y'a plus d'élément dans m2
+                    break;
+
+                else if (pt1 == NULL) {
+                    prec->suivant = pt2;
+                    break;
+                }
+                
+                
+                if (pt1->colonne == pt2->colonne) { // 1er cas
+                    pt1->valeur += pt2->valeur;
+                    prec = pt1;
+                    pt1 = pt1->suivant;
+                    pt2= pt2->suivant;
+                }
+                
+                else if (pt1->colonne < pt2->colonne) { //2ème cas
+                    prec = pt1;
+                    pt1 = pt1->suivant;
+                    
+                } else if (pt2->colonne < pt1->colonne) { //3ème cas
+                    elem=malloc(sizeof(element)); //on alloue de la mémoire à un nouveau élément dans m1
+                    elem->valeur = pt2->valeur;
+                    elem->colonne = pt2->colonne;
+                    elem->suivant = pt1; //on loue le nouvel élément à pt1 qui sera le suivant
+                    
+                    if (pt1 == m1.tableauLignes[i]) //si c'est notre premier élément dans m1
+                        m1.tableauLignes[i]=elem; //notre nouvel élément devient le premier de la ligne
+                    else
+                        prec->suivant=elem; //on lie le nouvel élément au précedent
+                    
+                    prec = elem;
+                    pt2 = pt2->suivant;
+                }
+                
+            }
+        }
+    }
+}

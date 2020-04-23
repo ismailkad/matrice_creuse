@@ -12,11 +12,6 @@ typedef struct matrice_creuse {
     int Ncolonnes;
 } matrice_creuse;
 
-typedef struct all_matrice {
-    matrice_creuse *tab_mat;
-    int nb_matrice;
-} all_matrice;
-
 void remplirMat(matrice_creuse *m, int N, int M);
 void afficherMat(matrice_creuse m);
 void addMat(matrice_creuse m1, matrice_creuse m2);

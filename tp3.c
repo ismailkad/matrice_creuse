@@ -286,6 +286,7 @@ void freeMat(matrice_creuse *m)
     elemn=elemn->suivant;
     free(buffer);
   }
-  free(m->tableauLignes[i]);
+  
  }
+  free(m->tableauLignes);
 }

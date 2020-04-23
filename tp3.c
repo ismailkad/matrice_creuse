@@ -98,7 +98,6 @@ int k,split_espaces;
 void afficherMat(matrice_creuse m, int longest_chiffre) {
 
     int i,j;
-    int zero = 0;
     
     for (i=0; i<m.Nlignes; i++) {
         
@@ -112,7 +111,7 @@ void afficherMat(matrice_creuse m, int longest_chiffre) {
                 pointeur = pointeur->suivant; //on passe à l'élément suivant
             }
             else //si le pointeur n'est pas à la bonne position ou si il est NULL alors l'élément est égal à 0
-                                    PrintRow((longest_chiffre-1),pointeur->valeur);
+                                    PrintRow((longest_chiffre-1),0);
 
         }
         
@@ -275,18 +274,24 @@ int nombreOctetsGagnes(matrice_creuse m1)
     
 }
 void freeMat(matrice_creuse *m)
-{
- int i,j;
- element *elem,*buffer;
- for (i=0;i<Nlignes;i++)
- { while(elem!=NULL)
-  {
-    elem=m.tableauLignes[i];
-    buffer=elem;
-    elemn=elemn->suivant;
-    free(buffer);
-  }
-  
- }
-  free(m->tableauLignes);
-}
+
+    {
+    int i, j;
+    element *pointeur,*tmp;
+
+
+        for (i=0; i<m->Nlignes;i++){
+                pointeur=m->tableauLignes[i];
+                tmp=pointeur;
+                
+                while (pointeur!=NULL){
+                            pointeur=tmp->suivant;
+                            free(tmp);
+                            tmp=pointeur;
+                            printf("%d\n",j++);
+                }
+                            printf("\n");
+        
+        }   
+
+   }

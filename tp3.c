@@ -2,13 +2,20 @@
 #include <stdlib.h>
 #include "tp3.h"
 
+ int get_int_len(int value)
+    {
+        int length=1;
+            while(value>9){ length++; value/=10; }
+            return length;
+    }
 
 // Fonction pour saisir les éléments non-nuls d'une matrice creuse
-void remplirMat(matrice_creuse *m, int N, int M) {
+int remplirMat(matrice_creuse *m, int N, int M) {
     
     int i, j;
     int first_elem; //first_elem sera un drapeau qui nous permettra de déterminer si le premier élément a été saisi ou non
     int saisie;
+    int longestlength=1,digitlength=1;
 
     element *elem, *temp = NULL;
     
@@ -28,6 +35,12 @@ void remplirMat(matrice_creuse *m, int N, int M) {
             
             if(saisie!=0) {
                 
+                digitlength=get_int_len(saisie);
+                    if (digitlength > longestlength)
+                    {
+                        longestlength=digitlength;
+                    }
+                
                 elem=malloc(sizeof(element)); //on alloue de la mémoire à l'élément qui est non nul
                 elem->colonne=j;
                 elem->valeur=saisie;
@@ -44,16 +57,16 @@ void remplirMat(matrice_creuse *m, int N, int M) {
             }
         }
     }
+    return(longestlength);
 }
-
-void bordures(int j)  //affiche bordures de la matrice
+void PrintBorder(int j,int longestlength)  //affiche border du matrice
 {
 int i,k;
 
                 for (k=0; k <j; k++)
                 {
                 printf("|--");
-                    for (i=0; i<5; i++)
+                    for (i=0; i<longestlength; i++)
                     {
                          printf("-");
                     }
@@ -61,12 +74,28 @@ int i,k;
                 printf("|\n");
 }
 
+void PrintRow(int num_espaces,int valeur)  //affiche border du matrice
+{
+int k,split_espaces;
+                    
+                    split_espaces=num_espaces/2;
+                    for ( k = 0; k<split_espaces; k++){
+                        printf(" ");
+                    }
+
+                    printf("%d",valeur);             
+                    
+                    for ( k = split_espaces; k<= num_espaces; k++){
+                        printf(" ");
+                    }
+}
+
 
 
 
 
 // Fonction pour afficher une matrice creuse
-void afficherMat(matrice_creuse m) {
+void afficherMat(matrice_creuse m, int longest_chiffre) {
 
     int i,j;
     int zero = 0;
@@ -74,20 +103,23 @@ void afficherMat(matrice_creuse m) {
     for (i=0; i<m.Nlignes; i++) {
         
         element *pointeur = m.tableauLignes[i]; //pour chaque ligne on assigne un pointeur de type élément 
-        bordures(m.Ncolonnes)
+        PrintBorder(m.Ncolonnes,longest_chiffre);
         for (j=0; j<m.Ncolonnes; j++ ) {
             printf("| ");
             if ((pointeur != NULL ) && (pointeur->colonne == j)) { //si la ligne n'est pas vide et que le pointeur est à la bonne colonne
                 
-                printf("%5d", pointeur->valeur); 
+                PrintRow((longest_chiffre-get_int_len(pointeur->valeur)),pointeur->valeur);
                 pointeur = pointeur->suivant; //on passe à l'élément suivant
             }
             else //si le pointeur n'est pas à la bonne position ou si il est NULL alors l'élément est égal à 0
-                printf("%5d", zero);
+                                    PrintRow((longest_chiffre-1),pointeur->valeur);
+
         }
         
         printf("|\n");
     }
+        PrintBorder(m.Ncolonnes,longest_chiffre);
+
 }
 
 void addMat(matrice_creuse m1, matrice_creuse m2) {

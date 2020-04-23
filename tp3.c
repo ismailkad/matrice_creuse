@@ -133,6 +133,25 @@ void addMat(matrice_creuse m1, matrice_creuse m2) {
     }
 }
 
+//Fonction pour afficher une valeur d'une ligne et colonne données
+int getValue(matrice_creuse m, int i, int j) {
+    
+    element *elem = m.tableauLignes[i];
+    
+    if ( (elem == NULL) || ((elem->colonne < j) && (elem->suivant == NULL)) || (elem->colonne > j) ) //les cas pour lesquels l'élement que l'on veut retourner est égal à 0
+        return 0;
+    
+    else {
+        if (elem->colonne < j)
+            while ( (elem->colonne < j) && (elem->suivant != NULL))
+                elem = elem->suivant;
+        if (elem->colonne == j)
+            return elem->valeur;
+        else
+            return 0;
+    }
+}
+
 //Fonction pour mettre à jour ou ajouter une valeur dans notre matrice
 void putValue(matrice_creuse m, int i, int j, int val) {
     

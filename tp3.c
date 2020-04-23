@@ -2,16 +2,44 @@
 #include <stdlib.h>
 #include "tp3.h"
 
+ int get_int_len(int value)
+    {
+        int length=1;
+            while(value>9){ length++; value/=10; }
+            return length;
+    }
+
+element * newelement(element * suivant, int col,int valeur)
+    {
+        element *pointeur;
+        pointeur=malloc(sizeof(element));
+        if ( elem == NULL )
+                         {
+                              fprintf(stderr,"Allocation impossible \n");
+                              exit(EXIT_FAILURE);
+                         }
+        pointeur->colonne=col;
+        pointeur->valeur=valeur;
+        pointeur->suivant =suivant;
+        return  pointeur;
+    }
+
 // Fonction pour saisir les éléments non-nuls d'une matrice creuse
-void remplirMat(matrice_creuse *m, int N, int M) {
+int remplirMat(matrice_creuse *m, int N, int M) {
     
     int i, j;
     int first_elem; //first_elem sera un drapeau qui nous permettra de déterminer si le premier élément a été saisi ou non
     int saisie;
+    int longestlength=1,digitlength=1;
 
     element *elem, *temp = NULL;
     
     m->tableauLignes = malloc(N*sizeof(liste_lignes)); //on alloue de la mémoire aux N lignes
+    if ( m->tableauLignes == NULL )
+    {
+         fprintf(stderr,"Allocation impossible \n");
+         exit(EXIT_FAILURE);
+    }
     m->Ncolonnes = M;
     m->Nlignes = N;
     
@@ -27,10 +55,14 @@ void remplirMat(matrice_creuse *m, int N, int M) {
             
             if(saisie!=0) {
                 
-                elem=malloc(sizeof(element)); //on alloue de la mémoire à l'élément qui est non nul
-                elem->colonne=j;
-                elem->valeur=saisie;
-                elem->suivant = NULL; //on ne sait pas si notre élément sera le dernier élément de la liste donc on initialise toujours elem->suivant à NUL
+                digitlength=get_int_len(saisie);
+                    if (digitlength > longestlength)
+                    {
+                        longestlength=digitlength;
+                    }
+             
+                elem=newelement(NULL,j,saisie);//on alloue de la mémoire à l'élément qui est non nul
+                 //on ne sait pas si notre élément sera le dernier élément de la liste donc on initialise toujours elem->suivant à NUL
                 
                 if (first_elem == 1) //si notre élément n'est pas le premier de la ligne
                     temp->suivant = elem;
@@ -43,33 +75,68 @@ void remplirMat(matrice_creuse *m, int N, int M) {
             }
         }
     }
+    return(longestlength);
+}
+void PrintBorder(int j,int longestlength)  //affiche border du matrice
+{
+int i,k;
+
+                for (k=0; k <j; k++)
+                {
+                printf("|--");
+                    for (i=0; i<longestlength; i++)
+                    {
+                         printf("-");
+                    }
+                }
+                printf("|\n");
+}
+
+void PrintRow(int num_espaces,int valeur)  //affiche border du matrice
+{
+int k,split_espaces;
+                    
+                    split_espaces=num_espaces/2;
+                    for ( k = 0; k<split_espaces; k++){
+                        printf(" ");
+                    }
+
+                    printf("%d",valeur);             
+                    
+                    for ( k = split_espaces; k<= num_espaces; k++){
+                        printf(" ");
+                    }
 }
 
 
 
+
+
 // Fonction pour afficher une matrice creuse
-void afficherMat(matrice_creuse m) {
+void afficherMat(matrice_creuse m, int longest_chiffre) {
 
     int i,j;
-    int zero = 0;
     
     for (i=0; i<m.Nlignes; i++) {
         
         element *pointeur = m.tableauLignes[i]; //pour chaque ligne on assigne un pointeur de type élément 
-        
+        PrintBorder(m.Ncolonnes,longest_chiffre);
         for (j=0; j<m.Ncolonnes; j++ ) {
-            
+            printf("| ");
             if ((pointeur != NULL ) && (pointeur->colonne == j)) { //si la ligne n'est pas vide et que le pointeur est à la bonne colonne
                 
-                printf("%5d", pointeur->valeur); 
+                PrintRow((longest_chiffre-get_int_len(pointeur->valeur)),pointeur->valeur);
                 pointeur = pointeur->suivant; //on passe à l'élément suivant
             }
             else //si le pointeur n'est pas à la bonne position ou si il est NULL alors l'élément est égal à 0
-                printf("%5d", zero);
+                                    PrintRow((longest_chiffre-1),0);
+
         }
         
-        printf("\n");
+        printf("|\n");
     }
+        PrintBorder(m.Ncolonnes,longest_chiffre);
+
 }
 
 void addMat(matrice_creuse m1, matrice_creuse m2) {
@@ -114,10 +181,10 @@ void addMat(matrice_creuse m1, matrice_creuse m2) {
                     pt1 = pt1->suivant;
                     
                 } else if (pt2->colonne < pt1->colonne) { //3ème cas
-                    elem=malloc(sizeof(element)); //on alloue de la mémoire à un nouveau élément dans m1
-                    elem->valeur = pt2->valeur;
-                    elem->colonne = pt2->colonne;
-                    elem->suivant = pt1; //on loue le nouvel élément à pt1 qui sera le suivant
+                    
+                    elem=newelement(pt1,pt1->colonne,pt1->valeur);
+                     //on alloue de la mémoire à un nouveau élément dans m1
+                    //on loue le nouvel élément à pt1 qui sera le suivant
                     
                     if (pt1 == m1.tableauLignes[i]) //si c'est notre premier élément dans m1
                         m1.tableauLignes[i]=elem; //notre nouvel élément devient le premier de la ligne
@@ -158,11 +225,9 @@ void putValue(matrice_creuse m, int i, int j, int val) {
     element *prec = NULL, *tmp = NULL, *elem = m.tableauLignes[i];
     
     if (elem == NULL) {
-        tmp = malloc(sizeof(element));
+        tmp=newelement(NULL,j,val);
         m.tableauLignes[i] = tmp;
-        tmp->suivant = NULL;
-        tmp->valeur = val;
-        tmp->colonne = j;
+        
     }
     
     else {
@@ -171,11 +236,10 @@ void putValue(matrice_creuse m, int i, int j, int val) {
         
         else if (elem->colonne > j) { //2ème cas
             
-            tmp = malloc(sizeof(element));
+            tmp=newelement(elem,j,val);
+            
             m.tableauLignes[i] = tmp;
-            tmp->suivant = elem;
-            tmp->valeur = val;
-            tmp->colonne = j;
+            
         }
         
         else if (elem->colonne < j) { //3ème cas
@@ -185,20 +249,17 @@ void putValue(matrice_creuse m, int i, int j, int val) {
                 elem = elem->suivant;
             }
             if (elem->colonne > j) {
-                tmp = malloc(sizeof(element));
+                tmp=newelement(elem,j,val);
                 prec->suivant = tmp;
-                tmp->suivant = elem;
-                tmp->valeur = val;
-                tmp->colonne = j;
+                
             }
             else if (elem->colonne == j)
                 elem->valeur = val;
             else {
-                tmp = malloc(sizeof(element));
+                tmp=newelement(NULL,j,val);
+                
                 elem->suivant = tmp;
-                tmp->suivant = NULL;
-                tmp->valeur = val;
-                tmp->colonne = j;
+                
             }
         }
     }
@@ -207,7 +268,7 @@ void putValue(matrice_creuse m, int i, int j, int val) {
 //Fonction pour déterminer le nb d'octets gagnés
 int nombreOctetsGagnes(matrice_creuse m1)
 {
-    int i, j, somme_elem=0, taille_elem, taille_matrice, nbOctetsGagnes;
+    int i, j, somme_elem=m1.Nlignes, taille_elem, taille_matrice, nbOctetsGagnes, temp;
     
     for(i=0; i<m1.Nlignes; i++) {
         
@@ -215,21 +276,53 @@ int nombreOctetsGagnes(matrice_creuse m1)
         
         if (elem == NULL) //si la ligne ne contient que des 0
             continue;
-        
+      
+        temp=0;
         for(j=0; j<m1.Ncolonnes; j++)
+        {
 
             if ((elem != NULL) && (elem->colonne==j)) {
                 somme_elem++;
                 elem = elem->suivant;
+                temp++;
             }
+        }
+        if(temp>1)
+        {
+         somme_elem--;
+        }
+         
+       
         
     }
     
     taille_elem = somme_elem*sizeof(element);
-    taille_matrice = m1.Nlignes*m1.Ncolonnes*sizeof(element);
+    taille_matrice = m1.Nlignes*m1.Ncolonnes*sizeof(int);
     
     nbOctetsGagnes = taille_matrice-taille_elem;
     
     return nbOctetsGagnes;
     
 }
+void freeMat(matrice_creuse *m)
+
+    {
+    int i, j;
+    element *pointeur,*tmp;
+
+
+        for (i=0; i<m->Nlignes;i++){
+                pointeur=m->tableauLignes[i];
+                tmp=pointeur;
+                
+                while (pointeur!=NULL){
+                            pointeur=tmp->suivant;
+                            free(tmp);
+                            tmp=pointeur;
+                            printf("%d\n",j++);
+                }
+                            printf("\n");
+        
+        }   
+
+   }

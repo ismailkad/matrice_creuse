@@ -238,7 +238,7 @@ void putValue(matrice_creuse m, int i, int j, int val) {
 //Fonction pour déterminer le nb d'octets gagnés
 int nombreOctetsGagnes(matrice_creuse m1)
 {
-    int i, j, somme_elem=0, taille_elem, taille_matrice, nbOctetsGagnes;
+    int i, j, somme_elem=m1.Ncolonnes, taille_elem, taille_matrice, nbOctetsGagnes, temp;
     
     for(i=0; i<m1.Nlignes; i++) {
         
@@ -246,21 +246,46 @@ int nombreOctetsGagnes(matrice_creuse m1)
         
         if (elem == NULL) //si la ligne ne contient que des 0
             continue;
-        
+      
+        temp=0;
         for(j=0; j<m1.Ncolonnes; j++)
+        {
 
             if ((elem != NULL) && (elem->colonne==j)) {
                 somme_elem++;
                 elem = elem->suivant;
+                temp++;
             }
+        }
+        if(temp>1)
+        {
+         somme_elem--;
+        }
+         
+       
         
     }
     
     taille_elem = somme_elem*sizeof(element);
-    taille_matrice = m1.Nlignes*m1.Ncolonnes*sizeof(element);
+    taille_matrice = m1.Nlignes*m1.Ncolonnes*sizeof(int);
     
     nbOctetsGagnes = taille_matrice-taille_elem;
     
     return nbOctetsGagnes;
     
+}
+void freeMat(matrice_creuse *m)
+{
+ int i,j;
+ element *elem,*buffer;
+ for (i=0;i<Nlignes;i++)
+ { while(elem!=NULL)
+  {
+    elem=m.tableauLignes[i];
+    buffer=elem;
+    elemn=elemn->suivant;
+    free(buffer);
+  }
+  free(m->tableauLignes[i]);
+ }
 }

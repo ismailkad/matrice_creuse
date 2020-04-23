@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include "tp3.h"
 
+
 // Fonction pour saisir les éléments non-nuls d'une matrice creuse
 void remplirMat(matrice_creuse *m, int N, int M) {
     
@@ -45,6 +46,23 @@ void remplirMat(matrice_creuse *m, int N, int M) {
     }
 }
 
+void bordures(int j)  //affiche bordures de la matrice
+{
+int i,k;
+
+                for (k=0; k <j; k++)
+                {
+                printf("|--");
+                    for (i=0; i<5; i++)
+                    {
+                         printf("-");
+                    }
+                }
+                printf("|\n");
+}
+
+
+
 
 
 // Fonction pour afficher une matrice creuse
@@ -56,9 +74,9 @@ void afficherMat(matrice_creuse m) {
     for (i=0; i<m.Nlignes; i++) {
         
         element *pointeur = m.tableauLignes[i]; //pour chaque ligne on assigne un pointeur de type élément 
-        
+        bordures(m.Ncolonnes)
         for (j=0; j<m.Ncolonnes; j++ ) {
-            
+            printf("| ");
             if ((pointeur != NULL ) && (pointeur->colonne == j)) { //si la ligne n'est pas vide et que le pointeur est à la bonne colonne
                 
                 printf("%5d", pointeur->valeur); 
@@ -68,7 +86,7 @@ void afficherMat(matrice_creuse m) {
                 printf("%5d", zero);
         }
         
-        printf("\n");
+        printf("|\n");
     }
 }
 

@@ -20,6 +20,11 @@ int remplirMat(matrice_creuse *m, int N, int M) {
     element *elem, *temp = NULL;
     
     m->tableauLignes = malloc(N*sizeof(liste_lignes)); //on alloue de la mémoire aux N lignes
+    if ( m->tableauLignes == NULL )
+    {
+         fprintf(stderr,"Allocation impossible \n");
+         exit(EXIT_FAILURE);
+    }
     m->Ncolonnes = M;
     m->Nlignes = N;
     
@@ -42,6 +47,11 @@ int remplirMat(matrice_creuse *m, int N, int M) {
                     }
                 
                 elem=malloc(sizeof(element)); //on alloue de la mémoire à l'élément qui est non nul
+                if ( elem == NULL )
+                         {
+                              fprintf(stderr,"Allocation impossible \n");
+                              exit(EXIT_FAILURE);
+                         }
                 elem->colonne=j;
                 elem->valeur=saisie;
                 elem->suivant = NULL; //on ne sait pas si notre élément sera le dernier élément de la liste donc on initialise toujours elem->suivant à NUL
@@ -164,6 +174,12 @@ void addMat(matrice_creuse m1, matrice_creuse m2) {
                     
                 } else if (pt2->colonne < pt1->colonne) { //3ème cas
                     elem=malloc(sizeof(element)); //on alloue de la mémoire à un nouveau élément dans m1
+                    if ( elem == NULL )
+                              {
+                                   fprintf(stderr,"Allocation impossible \n");
+                                   exit(EXIT_FAILURE);
+                              }
+                 
                     elem->valeur = pt2->valeur;
                     elem->colonne = pt2->colonne;
                     elem->suivant = pt1; //on loue le nouvel élément à pt1 qui sera le suivant
@@ -189,6 +205,11 @@ void putValue(matrice_creuse m, int i, int j, int val) {
     
     if (elem == NULL) {
         tmp = malloc(sizeof(element));
+        if (tmp == NULL )
+        {
+             fprintf(stderr,"Allocation impossible \n");
+             exit(EXIT_FAILURE);
+        }
         m.tableauLignes[i] = tmp;
         tmp->suivant = NULL;
         tmp->valeur = val;
@@ -202,6 +223,11 @@ void putValue(matrice_creuse m, int i, int j, int val) {
         else if (elem->colonne > j) { //2ème cas
             
             tmp = malloc(sizeof(element));
+            if ( tmp == NULL )
+                   {
+                        fprintf(stderr,"Allocation impossible \n");
+                        exit(EXIT_FAILURE);
+                   }
             m.tableauLignes[i] = tmp;
             tmp->suivant = elem;
             tmp->valeur = val;
@@ -216,6 +242,11 @@ void putValue(matrice_creuse m, int i, int j, int val) {
             }
             if (elem->colonne > j) {
                 tmp = malloc(sizeof(element));
+                if (tmp == NULL )
+                     {
+                          fprintf(stderr,"Allocation impossible \n");
+                          exit(EXIT_FAILURE);
+                     }
                 prec->suivant = tmp;
                 tmp->suivant = elem;
                 tmp->valeur = val;
@@ -225,6 +256,11 @@ void putValue(matrice_creuse m, int i, int j, int val) {
                 elem->valeur = val;
             else {
                 tmp = malloc(sizeof(element));
+                if (tmp == NULL )
+                      {
+                           fprintf(stderr,"Allocation impossible \n");
+                           exit(EXIT_FAILURE);
+                      }
                 elem->suivant = tmp;
                 tmp->suivant = NULL;
                 tmp->valeur = val;

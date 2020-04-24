@@ -158,7 +158,7 @@ void addMat(matrice_creuse m1, matrice_creuse m2) {
             else if (pt1 == NULL)//si la ligne de m1 ne comporte que des 0
                 pt1 = pt2;
             
-            for (j=0; j<m1.Nlignes; j++) {
+            for (j=0; j<m1.Ncolonnes; j++) {
                 
                 if (pt2 == NULL) //si l'élément de la 2ème matrice est NULL alors on sort de cette boucle car il n'y'a plus d'élément dans m2
                     break;
@@ -304,8 +304,8 @@ int nombreOctetsGagnes(matrice_creuse m1)
     return nbOctetsGagnes;
     
 }
-void freeMat(matrice_creuse *m)
 
+void freeMat(matrice_creuse *m)
     {
     int i, j=0;
     element *pointeur,*tmp;

@@ -17,7 +17,7 @@ int main() {
         int N, M, val;
         
         /* affichage menu */
-        printf("Menu:\n"
+        printf("\nMenu:\n\n"
                "1. Remplir une matrice creuse\n"
                "2. Afficher une matrice creuse\n"
                "3. Donner la valeur d'un élément d'une matrice creuse\n"
@@ -25,7 +25,7 @@ int main() {
                "5. Additionner deux matrices creuses\n"
                "6. Calculer le gain en espace en utilisant cette représentation pour une matrice donnée\n"
                "7. Quitter\n"
-               "Votre choix: "
+               "\nVotre choix: "
                );
         
         scanf("%d",&c);
@@ -71,9 +71,9 @@ int main() {
                     scanf("%d", &a);
                     
                     if ((a == 1) && (i>0))
-                        afficherMat(m1);
+                        afficherMat(m1,1);
                     else if ((a == 2) && (i>1))
-                        afficherMat(m2);
+                        afficherMat(m2,1);
                     else
                         printf("Mauvaise saisie\n");
                     
@@ -154,7 +154,7 @@ int main() {
             case 5:
                 
                 addMat(m1, m2);
-                afficherMat(m1);
+                afficherMat(m1,1);
     
                 break;
                 

@@ -1,10 +1,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "tp3.h"
+#include "tp3.c" 
 
 int main() {
     
     int fin;
+    int longestnomat1,longestnomat2,digitlength;
     matrice_creuse m1, m2;
     
     int i = 0; //drapeau qui permettra de déterminer si une matrice ou deux matrices ont été enregistré
@@ -46,11 +48,12 @@ int main() {
                     scanf("%d", &M);
                     
                     if (i == 0) {
-                        remplirMat(&m1, N, M);
+                       
+                        longestnomat1=remplirMat(&m1, N, M); 
                         i = 1;
                     }
                     else if (i == 1) {
-                        remplirMat(&m2, N, M);
+                        longestnomat2=remplirMat(&m2, N, M); 
                         i += 1;
                     }
             
@@ -71,9 +74,9 @@ int main() {
                     scanf("%d", &a);
                     
                     if ((a == 1) && (i>0))
-                        afficherMat(m1,1);
+                        afficherMat(m1,longestnomat1);
                     else if ((a == 2) && (i>1))
-                        afficherMat(m2,1);
+                        afficherMat(m2,longestnomat2);
                     else
                         printf("Mauvaise saisie\n");
                     
@@ -140,10 +143,17 @@ int main() {
                         
                         if (a == 1) {
                             putValue(m1, N, M, val);
+                            digitlength=get_int_len(val);        
+                            if ( digitlength > longestnomat1)    
+                                longestnomat1=digitlength;  
+                            
                             printf("L'élément a bien été modifié. \n");
                         }
                         else if (a == 2) {
-                            putValue(m1, N, M, val);
+                            putValue(m2, N, M, val);
+                            digitlength=get_int_len(val); 
+                            if ( digitlength > longestnomat2)    
+                                longestnomat2=digitlength;
                             printf("L'élément a bien été modifié. \n");
                         }
                         
@@ -153,8 +163,11 @@ int main() {
                     
             case 5:
                 
-                addMat(m1, m2);
-                afficherMat(m1,1);
+                 if(longestnomat2>longestnomat1){      
+                    longestnomat1=longestnomat2+1;    
+                }
+                addMat(m1, m2);                      
+                afficherMat(m1,longestnomat1);
     
                 break;
                 
@@ -195,7 +208,11 @@ int main() {
                 printf("Choix erroné\n");
         }
     }
-    
+     if (i > 0) 
+                freeMat(&m1);        
+     if (i >1)     
+                freeMat(&m2);        
+
     return 0;
 }
 

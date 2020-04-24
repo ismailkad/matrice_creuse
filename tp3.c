@@ -13,7 +13,7 @@ element * newelement(element * suivant, int col,int valeur)
     {
         element *pointeur;
         pointeur=malloc(sizeof(element));
-        if ( elem == NULL )
+        if (pointeur == NULL )
                          {
                               fprintf(stderr,"Allocation impossible \n");
                               exit(EXIT_FAILURE);
@@ -59,6 +59,7 @@ int remplirMat(matrice_creuse *m, int N, int M) {
                     if (digitlength > longestlength)
                     {
                         longestlength=digitlength;
+                        printf("longest length = %d\n",longestlength);
                     }
              
                 elem=newelement(NULL,j,saisie);//on alloue de la mémoire à l'élément qui est non nul
@@ -153,10 +154,13 @@ void addMat(matrice_creuse m1, matrice_creuse m2) {
             element *pt1 = m1.tableauLignes[i];
             element *pt2 = m2.tableauLignes[i];
             
-            if ( ((pt1 == NULL) && (pt2 == NULL)) || (pt2 == NULL) ) //si les 2 lignes ne comportent que des 0 ou si la ligne de m2 ne comporte que des 0
+             if ( (pt2 == NULL) )
                 continue; // on n'a pas besoin de passer à la boucle sur les colonnes, 'continue' ici va passer à l'itération de ligne suivante
-            else if (pt1 == NULL)//si la ligne de m1 ne comporte que des 0
-                pt1 = pt2;
+            else if (pt1 == NULL) {//si la ligne de m1 ne comporte que des 0
+                m1.tableauLignes[i] = pt2;
+                continue;
+            }
+            
             
             for (j=0; j<m1.Nlignes; j++) {
                 
@@ -276,21 +280,12 @@ int nombreOctetsGagnes(matrice_creuse m1)
         
         if (elem == NULL) //si la ligne ne contient que des 0
             continue;
-      
-        temp=0;
-        for(j=0; j<m1.Ncolonnes; j++)
-        {
-
-            if ((elem != NULL) && (elem->colonne==j)) {
-                somme_elem++;
-                elem = elem->suivant;
-                temp++;
-            }
-        }
-        if(temp>1)
-        {
-         somme_elem--;
-        }
+        somme_elem--;                           
+        while(elem != NULL){                    
+                somme_elem++;                   
+                elem = elem->suivant;          
+            } 
+        
          
        
         
@@ -311,18 +306,25 @@ void freeMat(matrice_creuse *m)
     element *pointeur,*tmp;
 
 
-        for (i=0; i<m->Nlignes;i++){
+         for (i=0; i<m->Nlignes;i++){
                 pointeur=m->tableauLignes[i];
-                tmp=pointeur;
-                
-                while (pointeur!=NULL){
+
+                if(m->tableauLignes[i]==NULL){                              
+                        free(m->tableauLignes[i]);
+                        printf("NULL colonne %d\n",j++);
+                }
+                else {
+                        tmp=pointeur->suivant;
+                        while (pointeur!=NULL){
                             pointeur=tmp->suivant;
                             free(tmp);
                             tmp=pointeur;
                             printf("%d\n",j++);
+                        }
+                            printf("Free colonne \n");
+                            free(m->tableauLignes[i]);
                 }
-                            printf("\n");
-        
         }   
 
-   }
+
+  }

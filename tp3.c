@@ -307,22 +307,36 @@ int nombreOctetsGagnes(matrice_creuse m1)
 void freeMat(matrice_creuse *m)
 
     {
-    int i, j;
+    int i, j=0;
     element *pointeur,*tmp;
 
 
         for (i=0; i<m->Nlignes;i++){
                 pointeur=m->tableauLignes[i];
-                tmp=pointeur;
-                
-                while (pointeur!=NULL){
-                            pointeur=tmp->suivant;
-                            free(tmp);
-                            tmp=pointeur;
-                            printf("%d\n",j++);
+
+                if(m->tableauLignes[i]==NULL){                               
+                        free(m->tableauLignes[i]);
+                        printf("NULL ROW %d\n",j++);
                 }
-                            printf("\n");
-        
+                else {
+                            tmp=pointeur->suivant;
+                            if(tmp!=NULL){
+                                do {
+                                    pointeur=tmp->suivant;
+                                    printf("freeing valeur %d iteration %d\n",tmp->valeur,j++);
+                                    free(tmp);
+                                    tmp=pointeur;
+                                }while (pointeur!=NULL);
+                            }
+                            tmp=m->tableauLignes[i];
+                            printf("Free row Root value %d iteration %d\n",tmp->valeur,j++);
+                            tmp=m->tableauLignes[i];
+                            free(m->tableauLignes[i]);
+                }
         }   
 
    }
+
+
+
+

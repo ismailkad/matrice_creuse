@@ -1,4 +1,5 @@
-
+#include <stdlib.h>
+#include "tp3.h"
 
  int get_int_len(int value)
     {

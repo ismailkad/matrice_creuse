@@ -15,7 +15,6 @@ typedef struct matrice_creuse {
     liste_lignes* tableauLignes;
     int Nlignes;
     int Ncolonnes;
-    char nom[20]; //
 } matrice_creuse;
 
 int get_int_len(int value);

@@ -23,7 +23,7 @@ element * newelement(element * suivant, int col,int valeur);
 int remplirMat(matrice_creuse *m, int N, int M);
 void PrintBorder(int j,int longestlength);
 void PrintRow(int num_espaces,int valeur);
-void afficherMat(matrice_creuse m, int longest_chiffre);
+void afficherMat(matrice_creuse m, int longestlenght);
 void addMat(matrice_creuse m1, matrice_creuse m2);
 int getValue(matrice_creuse m, int i, int j);
 void putValue(matrice_creuse m, int i, int j, int val);
